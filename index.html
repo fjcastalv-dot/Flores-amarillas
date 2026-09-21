@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Para ti 💛 Flores Amarillas</title>
+
+  <!-- Metadatos para compartir por WhatsApp / Redes Sociales -->
+  <meta property="og:title" content="Para ti 💛 Flores Amarillas">
+  <meta property="og:description" content="Toca el sobre para abrir tu sorpresa...">
+  <meta property="og:image" content="assets/sobre-cerrado.jpg">
+  <meta name="theme-color" content="#fcf8f0">
+
+  <!-- Fuentes Románticas -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Lienzo de pétalos y destellos animados -->
+  <canvas id="petals-canvas"></canvas>
+
+  <!-- Botón flotante de control de música -->
+  <button id="music-btn" class="music-toggle" aria-label="Control de música" title="Música">
+    <div class="music-icon-wrap">
+      <span class="music-flower">🌼</span>
+      <span class="music-waves">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </span>
+    </div>
+  </button>
+
+  <!-- Escenario principal interactivo -->
+  <main class="main-container">
+    <div id="scene" class="scene">
+
+      <!-- Contenedor del Sobre Cerrado (Pantalla Inicial) -->
+      <div id="envelope-closed-wrap" class="envelope-wrap envelope-closed-wrap" role="button" tabindex="0" aria-label="Toca el sobre para abrirlo">
+        <div class="envelope-glow"></div>
+        <div class="envelope-card-inner">
+          <img src="assets/sobre-cerrado.jpg" alt="Sobre cerrado con flor amarilla" class="envelope-img closed-img" draggable="false">
+        </div>
+        <div class="click-hint">
+          <span class="hint-sparkle">✨</span>
+          <span class="hint-text">Toca el sobre</span>
+          <span class="hint-sparkle">✨</span>
+        </div>
+      </div>
+
+      <!-- Contenedor del Sobre Abriéndose -->
+      <div id="envelope-open-wrap" class="envelope-wrap envelope-open-wrap">
+        <img src="assets/sobre-abierto.png" alt="Sobre abriéndose" class="envelope-img open-img" draggable="false">
+      </div>
+
+      <!-- Contenedor de la Carta que emerge -->
+      <div id="letter-wrap" class="letter-wrap">
+        <div class="letter-paper">
+          <div class="letter-glow"></div>
+          <img src="assets/carta.jpg" alt="Carta de amor para mi bella esposa" class="letter-img" draggable="false">
+        </div>
+        
+        <!-- Acciones románticas inferiores -->
+        <div class="letter-footer">
+          <p class="love-dedication">Para mi bella esposa, con todo mi amor 💛</p>
+          <button id="replay-btn" class="replay-button">
+            <span class="replay-icon">↺</span>
+            <span>Volver a abrir</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Elemento de audio para la canción Flores Amarillas -->
+  <audio id="romantic-audio" preload="auto" src="assets/flores-amarillas.mp3"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>

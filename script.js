@@ -177,32 +177,62 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --------------------------------------------------------
-  // 2. Control de Apertura y Audio (Segundo 46)
   // --------------------------------------------------------
+  // 2. Control de Apertura y Audio (Segundo 40 con Crescendo a 46)
+  // --------------------------------------------------------
+  let volumeFadeFrameId = null;
+
+  function startMusicWithCrescendo() {
+    if (volumeFadeFrameId) {
+      cancelAnimationFrame(volumeFadeFrameId);
+      volumeFadeFrameId = null;
+    }
+
+    audio.currentTime = 40.0;
+    audio.volume = 0.15; // Inicia con volumen suave en el segundo 40
+
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          musicBtn.classList.add('playing');
+        })
+        .catch((error) => {
+          console.warn('El navegador requirió interacción adicional:', error);
+        });
+    }
+
+    const startVol = 0.15;
+    const targetVol = 1.0;
+    const startSec = 40.0;
+    const targetSec = 46.0;
+
+    function rampVolume() {
+      if (!audio.paused && audio.currentTime < targetSec) {
+        const progress = Math.max(0, Math.min(1, (audio.currentTime - startSec) / (targetSec - startSec)));
+        // Curva suave progresiva hasta el momento cumbre
+        audio.volume = startVol + (targetVol - startVol) * Math.pow(progress, 1.15);
+        volumeFadeFrameId = requestAnimationFrame(rampVolume);
+      } else if (audio.currentTime >= targetSec) {
+        audio.volume = targetVol;
+        volumeFadeFrameId = null;
+      }
+    }
+
+    volumeFadeFrameId = requestAnimationFrame(rampVolume);
+  }
+
   function openEnvelope() {
     if (isOpened) return;
     isOpened = true;
 
-    // Fase 1: Iniciar apertura visual
+    // Fase 1: Iniciar apertura visual y ráfaga de pétalos
     scene.classList.add('opening');
     triggerPetalBurst();
 
-    // Fase 2: Transición hacia sobre abierto y carta emergiendo
+    // Fase 2: Transición hacia sobre abierto, carta emergiendo y música en segundo 40
     setTimeout(() => {
-      // Reproducir audio exactamente en el segundo 46
-      audio.currentTime = 46;
-      const playPromise = audio.play();
-
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            musicBtn.classList.add('playing');
-          })
-          .catch((error) => {
-            console.warn('El navegador requirió interacción adicional:', error);
-          });
-      }
-
+      startMusicWithCrescendo();
       // Desplegar la carta y pasar al estado 'opened'
       scene.classList.add('opened');
     }, 420);
@@ -228,6 +258,10 @@ document.addEventListener('DOMContentLoaded', () => {
     scene.classList.remove('opened');
     scene.classList.remove('opening');
 
+    // Pausar música temporalmente para reiniciar la experiencia completa al abrir de nuevo
+    audio.pause();
+    musicBtn.classList.remove('playing');
+
     // Reiniciar ráfaga de pétalos suave
     triggerPetalBurst();
   });
@@ -238,13 +272,13 @@ document.addEventListener('DOMContentLoaded', () => {
   musicBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     if (audio.paused) {
-      // Si estaba en 0 o no iniciado, comenzar en segundo 46
-      if (audio.currentTime < 46) {
-        audio.currentTime = 46;
+      if (audio.currentTime < 40) {
+        startMusicWithCrescendo();
+      } else {
+        audio.play().then(() => {
+          musicBtn.classList.add('playing');
+        });
       }
-      audio.play().then(() => {
-        musicBtn.classList.add('playing');
-      });
     } else {
       audio.pause();
       musicBtn.classList.remove('playing');
